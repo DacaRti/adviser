@@ -32,9 +32,9 @@ http://localhost:8080/users
 # DELETE (user)
 http://localhost:8080/users/1
 
-#TIPS:
+# TIPS:
 
-#GET (tips)
+# GET (tips)
 http://localhost:8080/tips
 # GET TIP BY ID
 http://localhost:8080/tips/1
