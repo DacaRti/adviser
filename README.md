@@ -4,7 +4,8 @@ Application for sharing tips between people
 # LAUNCH APP
 1. run spring boot main class (ProjectApplication.java);
 2. open terminal in src\webapp\reactjs;
-2. start the UI via "npm start" command;
+3. use "npm install" command;
+4. start the UI via "npm start" command;
 
 # Requests
 {
