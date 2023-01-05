@@ -1,0 +1,30 @@
+version: "3.8"
+services:
+  app-db:
+    image: postgres
+    restart: unless-stopped
+    container_name: "java-postgres"
+    environment:
+      - POSTGRES_DB=users
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=06082009bQ
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      timeout: 2s
+      retries: 3
+  app:
+    build: .
+    container_name: "java-app"
+    ports:
+      - "8080:8080"
+    depends_on:
+      app-db:
+        condition: service_healthy
+  client:
+    build: src/webapp/reactjs
+    container_name: client_frontend
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    tty: true
