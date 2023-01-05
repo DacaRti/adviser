@@ -2,7 +2,7 @@
 Application for sharing tips between people
 
 # LAUNCH APP
-1. open docker;
+1. Open docker;
 2. Use "docker-compose up" command in terminal;
 
 # Requests
