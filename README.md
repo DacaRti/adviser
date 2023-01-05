@@ -2,10 +2,8 @@
 Application for sharing tips between people
 
 # LAUNCH APP
-1. run spring boot main class (ProjectApplication.java);
-2. open terminal in src\webapp\reactjs;
-3. use "npm install" command;
-4. start the UI via "npm start" command;
+1. open docker;
+2. Use "docker-compose up" command in terminal;
 
 # Requests
 {
