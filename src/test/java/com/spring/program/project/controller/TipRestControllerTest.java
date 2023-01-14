@@ -52,9 +52,4 @@ public class TipRestControllerTest {
                 // Then
                 Assert.assertEquals(httpResponse.getStatusLine().getStatusCode(), HttpStatus.SC_FORBIDDEN);
         }
-
-        interface TestData {
-                String adminJwtToken = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTY3MjA4MjE5MSwiZXhwIjoxNjcyMTY4NTkxfQ.IkALFw90BsrRTdspDqh88rRC3_YKE03JJcFa_ZBz3ycabJNoDGnIRl5Cy9KZUaWLsy3m8n-OsprTiaWLZ5lxNw";
-                String userJwtToken = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyIiwiaWF0IjoxNjcyMDgyMTA2LCJleHAiOjE2NzIxNjg1MDZ9.0IZvfuaS-eua_OrqWHPD1MEgcnNcl720n5NuN3ShjVgzIZq0nNA4hjEQFyoYBX0IBcdlVoKRO1Xy8-KomvS_KQ";
-        }
 }
