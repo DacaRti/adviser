@@ -7,9 +7,9 @@ CREATE TABLE roles
 
 CREATE TABLE tips
 (
-    id   BIGSERIAL   NOT NULL PRIMARY KEY,
-    advice VARCHAR(80) NOT NULL,
-    description VARCHAR(300) NOT NULL
+    id          BIGSERIAL   NOT NULL PRIMARY KEY,
+    advice      VARCHAR(80) NOT NULL,
+    description VARCHAR(300)
 );
 
 CREATE TABLE users
