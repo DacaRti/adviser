@@ -15,7 +15,7 @@ public interface TestData {
     Role admin = Role.builder().name("admin").build();
     Role user = Role.builder().name("user").build();
 
-    User adminPerson = User.builder()
+    User adminUser = User.builder()
             .username("admin")
             .password("$2a$10$XZKIi39Xwq3miyHh9RPCCe7XbGnTKLum9fl2wnu/EDzJOO2BCIc/S")
             .firstName("admin")
@@ -25,12 +25,54 @@ public interface TestData {
             .role(admin)
             .build();
 
-    User userPerson = User.builder()
+    User firstUser = User.builder()
             .username("user")
             .password("$2a$10$Sb5nlxDf6Elc5Mh87oO9ZuCM59i4avAUdil.8JghomROi2Q8NyTxK")
             .firstName("user")
             .lastName("user")
             .email("user@gmail.com")
+            .birthday(LocalDate.parse("2003-03-03"))
+            .role(user)
+            .build();
+
+    User secondUser = User.builder()
+            .username("user2")
+            .password("$2a$10$Sb5nlxDf6Elc5Mh87oO9ZuCM59i4avAUdil.8JghomROi2Q8NyTxK")
+            .firstName("user2")
+            .lastName("user2")
+            .email("user2@gmail.com")
+            .birthday(LocalDate.parse("2003-03-03"))
+            .role(user)
+            .build();
+
+    User userForDelete = User.builder()
+            .username("deleteUser")
+            .password("deleteUser")
+            .firstName("deleteUser")
+            .lastName("deleteUser")
+            .email("deleteUser@gmail.com")
+            .birthday(LocalDate.parse("2003-03-03"))
+            .role(user)
+            .build();
+
+    User updateUser = User.builder()
+            .id(3L)
+            .username("updateUser")
+            .password("updateUser")
+            .firstName("updateUser")
+            .lastName("updateUser")
+            .email("updateUser@gmail.com")
+            .birthday(LocalDate.parse("2003-03-03"))
+            .role(user)
+            .build();
+
+
+    User createUser = User.builder()
+            .username("userForCreate")
+            .password("userForCreate")
+            .firstName("userForCreate")
+            .lastName("userForCreate")
+            .email("userForCreate@gmail.com")
             .birthday(LocalDate.parse("2003-03-03"))
             .role(user)
             .build();

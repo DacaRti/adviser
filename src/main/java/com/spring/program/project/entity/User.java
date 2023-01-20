@@ -1,5 +1,6 @@
 package com.spring.program.project.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.spring.program.project.converters.LocalDateStringConverter;
@@ -65,19 +66,25 @@ public class User implements UserDetails {
     @JoinColumn(name = "role_id")
     private Role role;
     @Transient
+    @JsonIgnore
     private boolean accountNonExpired;
     @Transient
+    @JsonIgnore
     private boolean accountNonLocked;
     @Transient
+    @JsonIgnore
     private boolean credentialsNonExpired;
     @Transient
+    @JsonIgnore
     private boolean enabled;
 
+    @JsonIgnore
     public int getAge() {
         return Period.between(this.birthday, LocalDate.now()).getYears();
     }
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(role);
     }

@@ -1,5 +1,6 @@
 package com.spring.program.project.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -34,6 +35,7 @@ public class Role implements GrantedAuthority {
     private String name;
 
     @Override
+    @JsonIgnore
     public String getAuthority() {
         return name;
     }

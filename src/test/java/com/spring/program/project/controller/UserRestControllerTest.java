@@ -6,11 +6,13 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.spring.program.project.ProjectApplication;
 import com.spring.program.project.controller.utils.TestData;
+import com.spring.program.project.entity.User;
 import com.spring.program.project.pojo.LoginRequest;
 import com.spring.program.project.repository.RoleRepository;
 import com.spring.program.project.repository.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -55,8 +57,10 @@ public class UserRestControllerTest {
     public void setUp() {
         roleRepository.save(TestData.admin);
         roleRepository.save(TestData.user);
-        userRepository.save(TestData.adminPerson);
-        userRepository.save(TestData.userPerson);
+        userRepository.save(TestData.adminUser);
+        userRepository.save(TestData.firstUser);
+        userRepository.save(TestData.secondUser);
+        userRepository.save(TestData.userForDelete);
     }
 
     @Test
@@ -98,7 +102,7 @@ public class UserRestControllerTest {
     }
 
     @Test
-    public void getUserById_whenAdminTryToGetUserById_thenStatus200() throws Exception {
+    public void getUserById_whenAdminTryToGetUserById_thenStatus200AndCorrectValue() throws Exception {
         String username = "admin";
         String password = "admin";
 
@@ -108,13 +112,13 @@ public class UserRestControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/users/1").header("Authorization", authToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(TestData.adminPerson.getId()))
-                .andExpect(jsonPath("$.username").value(TestData.adminPerson.getUsername()))
-                .andExpect(jsonPath("$.password").value(TestData.adminPerson.getPassword()))
-                .andExpect(jsonPath("$.email").value(TestData.adminPerson.getEmail()))
-                .andExpect(jsonPath("$.birthday").value(TestData.adminPerson.getBirthday().toString()))
-                .andExpect(jsonPath("$.firstName").value(TestData.adminPerson.getFirstName()))
-                .andExpect(jsonPath("$.lastName").value(TestData.adminPerson.getLastName()))
+                .andExpect(jsonPath("$.id").value(TestData.adminUser.getId()))
+                .andExpect(jsonPath("$.username").value(TestData.adminUser.getUsername()))
+                .andExpect(jsonPath("$.password").value(TestData.adminUser.getPassword()))
+                .andExpect(jsonPath("$.email").value(TestData.adminUser.getEmail()))
+                .andExpect(jsonPath("$.birthday").value(TestData.adminUser.getBirthday().toString()))
+                .andExpect(jsonPath("$.firstName").value(TestData.adminUser.getFirstName()))
+                .andExpect(jsonPath("$.lastName").value(TestData.adminUser.getLastName()))
                 .andDo(print())
                 .andReturn();
     }
@@ -142,6 +146,106 @@ public class UserRestControllerTest {
                 .andReturn();
     }
 
+    @Test
+    public void addNewUser_whenAdminTryToCreateUser_thenStatus200AndCorrectValue() throws Exception {
+        String username = "admin";
+        String password = "admin";
+
+        String tokenType = getTokenType(username, password);
+        String jwtToken = getJwtTokenByUsernameAndPassword(username, password);
+        String authToken = tokenType + " " + jwtToken;
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/users")
+                        .contentType(APPLICATION_JSON_UTF8)
+                        .header("Authorization", authToken)
+                        .content(getRequestJson(TestData.createUser)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value(TestData.createUser.getUsername()))
+                .andExpect(jsonPath("$.email").value(TestData.createUser.getEmail()))
+                .andExpect(jsonPath("$.birthday").value(TestData.createUser.getBirthday().toString()))
+                .andExpect(jsonPath("$.firstName").value(TestData.createUser.getFirstName()))
+                .andExpect(jsonPath("$.lastName").value(TestData.createUser.getLastName()))
+                .andDo(print())
+                .andReturn();
+    }
+
+    @Test
+    public void addNewUser_whenUserTryToCreateUser_thenStatus403() throws Exception {
+        String username = "user";
+        String password = "user";
+
+        String tokenType = getTokenType(username, password);
+        String jwtToken = getJwtTokenByUsernameAndPassword(username, password);
+        String authToken = tokenType + " " + jwtToken;
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/users")
+                        .contentType(APPLICATION_JSON_UTF8)
+                        .header("Authorization", authToken)
+                        .content(getRequestJson(TestData.createUser)))
+                .andExpect(status().is4xxClientError())
+                .andDo(print())
+                .andReturn();
+    }
+
+    @Test
+    public void addNewUser_whenUnknownTryToCreateUser_thenStatus403() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/users")
+                        .contentType(APPLICATION_JSON_UTF8)
+                        .content(getRequestJson(TestData.createUser)))
+                .andExpect(status().is4xxClientError())
+                .andDo(print())
+                .andReturn();
+    }
+
+    @Test
+    public void updateUser_whenAdminTryToUpdateUser_thenStatus200AndCorrectValue() throws Exception {
+        String username = "admin";
+        String password = "admin";
+
+        String tokenType = getTokenType(username, password);
+        String jwtToken = getJwtTokenByUsernameAndPassword(username, password);
+        String authToken = tokenType + " " + jwtToken;
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put("/users")
+                        .contentType(APPLICATION_JSON_UTF8)
+                        .header("Authorization", authToken)
+                        .content(getRequestJson(TestData.updateUser)))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andReturn();
+        ObjectMapper mapper = new ObjectMapper();
+        User user = mapper.readValue(result.getResponse().getContentAsByteArray(), User.class);
+        Assertions.assertTrue(userRepository.findAll().contains(user));
+    }
+
+    @Test
+    public void updateUser_whenUserTryToUpdateUser_thenStatus403() throws Exception {
+        String username = "user";
+        String password = "user";
+
+        String tokenType = getTokenType(username, password);
+        String jwtToken = getJwtTokenByUsernameAndPassword(username, password);
+        String authToken = tokenType + " " + jwtToken;
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/users")
+                        .contentType(APPLICATION_JSON_UTF8)
+                        .header("Authorization", authToken)
+                        .content(getRequestJson(TestData.createUser)))
+                .andExpect(status().is4xxClientError())
+                .andDo(print())
+                .andReturn();
+    }
+
+    @Test
+    public void updateUser_whenUnknownTryToUpdateUser_thenStatus403() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.put("/users")
+                        .contentType(APPLICATION_JSON_UTF8)
+                        .content(getRequestJson(TestData.createUser)))
+                .andExpect(status().is4xxClientError())
+                .andDo(print())
+                .andReturn();
+    }
+    
     private String getTokenType(String username, String password) throws Exception {
         for (String data : getContentByUsernameAndPassword(username, password)) {
             if (data.contains("\"type\"")) {
